@@ -1,0 +1,17 @@
+[
+    {
+        "type": "GLTF",
+        "path": "models/room_items.glb",
+        "name": "roomModel"
+    },
+    {
+        "type": "Texture",
+        "path": "textures/bake_with_bed_2.jpg",
+        "name": "roomTexture"
+    },
+    {
+        "type": "Texture",
+        "path": "textures/tri_pattern.jpg",
+        "name": "triPatternTexture"
+    }
+]
