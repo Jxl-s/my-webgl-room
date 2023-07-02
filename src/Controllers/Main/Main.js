@@ -84,6 +84,11 @@ class MainController extends Controller {
                 ease: "power2.out",
             });
 
+            // Close the other ones
+            if (this._boxOpen) {
+                this.onBoxClose();
+            }
+
             controls.enabled = true;
         };
 
@@ -237,12 +242,17 @@ class MainController extends Controller {
                 ease: "power2.out",
             });
         } else {
-            gsap.to(this._boxCoverItems[0].position, {
-                y: this._boxOriginalPosition.y,
-                duration: 1,
-                ease: "power2.out",
-            });
+            this.onBoxClose();
         }
+    }
+
+    onBoxClose() {
+        this._boxOpen = false;
+        gsap.to(this._boxCoverItems[0].position, {
+            y: this._boxOriginalPosition.y,
+            duration: 1,
+            ease: "power2.out",
+        });
     }
 }
 
