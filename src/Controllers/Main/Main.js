@@ -63,6 +63,7 @@ class MainController extends Controller {
         };
 
         const onEscape = (event) => {
+            if (event.key !== "Escape") return;
             // restore any camera
             const camera = this.experience.camera.object;
             const cameraController = Controller.get(CameraController);
@@ -96,6 +97,7 @@ class MainController extends Controller {
         window.addEventListener("touchmove", onMouseMove);
 
         window.addEventListener("click", onClick);
+        window.addEventListener("touchstart", onClick);
 
         window.addEventListener("keydown", onEscape);
 
