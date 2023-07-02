@@ -5,8 +5,8 @@ import Composer from "../../Experience/Composer";
 import CameraController from "../Camera/Camera";
 
 const options = {
-    screenOffColor: 0x000000,
-    screenOnColor: 0xffffff,
+    screenOffColor: new THREE.Color(0x000000),
+    screenOnColor: new THREE.Color(0xffffff),
 };
 
 class MainController extends Controller {
@@ -59,6 +59,14 @@ class MainController extends Controller {
                 if (this._selectedName === "BoxCover") {
                     this.onBoxClick();
                 }
+
+                if (this._selectedName === "ScreenA") {
+                    this.onScreenAClick();
+                }
+
+                if (this._selectedName === "ScreenB") {
+                    this.onScreenBClick();
+                }
             }
         };
 
@@ -90,6 +98,10 @@ class MainController extends Controller {
                 this.onBoxClose();
             }
 
+            if (this._screenAOpen) {
+                this.onScreenAClose();
+            }
+
             controls.enabled = true;
         };
 
@@ -113,14 +125,14 @@ class MainController extends Controller {
         const screenB = this.roomModel.scene.getObjectByName("ScreenB");
 
         screenA.material = screenMaterial;
-        screenB.material = screenMaterial;
+        screenB.material = screenMaterial.clone();
     }
 
     loadGlassMaterial() {
         const glassMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
+            color: 0x000000,
             transparent: true,
-            opacity: 0.2,
+            opacity: 0.5,
         });
 
         const caseGlass = this.roomModel.scene.getObjectByName("CaseGlass");
@@ -255,6 +267,106 @@ class MainController extends Controller {
             duration: 1,
             ease: "power2.out",
         });
+    }
+
+    onScreenAClick() {
+        if (this._screenAOpen === undefined) {
+            this._screenAOpen = false;
+        }
+
+        this._screenAOpen = !this._screenAOpen;
+
+        const screenA = this.roomModel.scene.getObjectByName("ScreenA");
+
+        if (this._screenAOpen) {
+            gsap.to(screenA.material.color, {
+                r: options.screenOnColor.r,
+                g: options.screenOnColor.g,
+                b: options.screenOnColor.b,
+                duration: 1,
+            });
+
+            // move the camera to the pc
+            const camera = this.experience.camera.object;
+            const cameraController = Controller.get(CameraController);
+            const controls = cameraController.controls;
+
+            controls.enabled = false;
+
+            gsap.to(camera.position, {
+                x: screenA.position.x - 1,
+                y: screenA.position.y,
+                z: screenA.position.z - 1.5,
+                duration: 1,
+                ease: "power2.out",
+            });
+
+            gsap.to(controls.target, {
+                x: screenA.position.x,
+                y: screenA.position.y,
+                z: screenA.position.z,
+                duration: 1,
+                ease: "power2.out",
+            });
+        } else {
+            gsap.to(screenA.material.color, {
+                r: options.screenOffColor.r,
+                g: options.screenOffColor.g,
+                b: options.screenOffColor.b,
+                duration: 1,
+            });
+        }
+    }
+
+    onScreenAClose() {}
+
+    onScreenBClick() {
+        if (this._screenBOpen === undefined) {
+            this._screenBOpen = false;
+        }
+
+        this._screenBOpen = !this._screenBOpen;
+
+        const screenB = this.roomModel.scene.getObjectByName("ScreenB");
+
+        if (this._screenBOpen) {
+            gsap.to(screenB.material.color, {
+                r: options.screenOnColor.r,
+                g: options.screenOnColor.g,
+                b: options.screenOnColor.b,
+                duration: 1,
+            });
+
+            // move the camera to the pc
+            const camera = this.experience.camera.object;
+            const cameraController = Controller.get(CameraController);
+            const controls = cameraController.controls;
+
+            controls.enabled = false;
+
+            gsap.to(camera.position, {
+                x: screenB.position.x - 0.5,
+                y: screenB.position.y,
+                z: screenB.position.z - 2,
+                duration: 1,
+                ease: "power2.out",
+            });
+
+            gsap.to(controls.target, {
+                x: screenB.position.x,
+                y: screenB.position.y,
+                z: screenB.position.z,
+                duration: 1,
+                ease: "power2.out",
+            });
+        } else {
+            gsap.to(screenB.material.color, {
+                r: options.screenOffColor.r,
+                g: options.screenOffColor.g,
+                b: options.screenOffColor.b,
+                duration: 1,
+            });
+        }
     }
 }
 
